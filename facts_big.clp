@@ -1,6 +1,7 @@
-;
-; Автоматически сгенерированные ингредиенты
-;
+
+(deffacts initial-data
+    (ioproxy (fact-id 112))
+
     (ingredient (name "Мука пшеничная"))
     (ingredient (name "Вода фильтрованная"))
     (ingredient (name "Яйца категории С0"))
@@ -136,3 +137,4 @@
     (ingredient (name "Детский праздничный набор"))
     (ingredient (name "Вегетарианское комбо"))
     (ingredient (name "Шведский стол домашний"))
+)
