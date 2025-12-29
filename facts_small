@@ -1,0 +1,18 @@
+
+(deffacts initial-data
+    (ioproxy (fact-id 112))
+    (ingredient (name "Мука пшеничная"))
+    (ingredient (name "Вода"))
+    (ingredient (name "Дрожжи"))
+    (ingredient (name "Соль"))
+    (ingredient (name "Томаты"))
+    (ingredient (name "Томатная паста"))
+    (ingredient (name "Чеснок"))
+    (ingredient (name "Базилик"))
+    (ingredient (name "Масло оливковое"))
+    (ingredient (name "Сыр Моцарелла"))
+    (ingredient (name "Сыр Российский"))
+    (ingredient (name "Тесто для пиццы"))
+    (ingredient (name "Соус томатный"))
+    (ingredient (name "Пицца Маргарита"))
+)
