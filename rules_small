@@ -1,0 +1,68 @@
+(defrule make-sauce-fresh
+    (declare (salience 10))
+    (ingredient (name "Томаты") (certainty ?c1&:(> ?c1 0.1)))
+    (ingredient (name "Чеснок") (certainty ?c2&:(> ?c2 0.1)))
+    (ingredient (name "Базилик") (certainty ?c3&:(> ?c3 0.1)))
+    (ingredient (name "Масло оливковое") (certainty ?c4&:(> ?c4 0.1)))
+    ?f <- (ingredient (name "Соус томатный") (certainty ?cur-c))
+    =>
+    (bind ?res (* (weighted-avg ?c1 10 ?c2 1 ?c3 1 ?c4 3) 1.0))
+    (if (> ?res ?cur-c) then
+        (modify ?f (certainty (max-certainty ?cur-c ?res)) (type result))
+        (assert (sendmessage (value (str-cat "ПРОЦЕСС: Соус (свежий) CF=" ?res))))
+    )
+)
+
+(defrule make-sauce-fast
+    (declare (salience 10))
+    (ingredient (name "Томатная паста") (certainty ?c1&:(> ?c1 0.1)))
+    (ingredient (name "Вода") (certainty ?c2&:(> ?c2 0.1)))
+    ?f <- (ingredient (name "Соус томатный") (certainty ?cur-c))
+    =>
+    (bind ?res (* (weighted-avg ?c1 10 ?c2 5) 0.6))
+    (if (> ?res ?cur-c) then
+        (modify ?f (certainty (max-certainty ?cur-c ?res)) (type result))
+        (assert (sendmessage (value (str-cat "ПРОЦЕСС: Соус (быстрый) CF=" ?res))))
+    )
+)
+(defrule make-margherita-budget
+    (declare (salience 10))
+    (ingredient (name "Тесто для пиццы") (certainty ?c1&:(> ?c1 0.1)))
+    (ingredient (name "Соус томатный") (certainty ?c2&:(> ?c2 0.1)))
+    (ingredient (name "Сыр Российский") (certainty ?c3&:(> ?c3 0.1)))
+    ?f <- (ingredient (name "Пицца Маргарита") (certainty ?cur-c))
+    =>
+    (bind ?res (* (weighted-avg ?c1 5 ?c2 5 ?c3 10) 0.7))
+    (if (> ?res ?cur-c) then
+        (modify ?f (certainty (max-certainty ?cur-c ?res)) (type result))
+        (assert (sendmessage (value (str-cat "ПРОЦЕСС: Пицца (бюджет) CF=" ?res))))
+    )
+)
+
+(defrule make-margherita-premium
+    (declare (salience 10))
+    (ingredient (name "Тесто для пиццы") (certainty ?c1&:(> ?c1 0.1)))
+    (ingredient (name "Соус томатный") (certainty ?c2&:(> ?c2 0.1)))
+    (ingredient (name "Сыр Моцарелла") (certainty ?c3&:(> ?c3 0.1)))
+    ?f <- (ingredient (name "Пицца Маргарита") (certainty ?cur-c))
+    =>
+    (bind ?res (* (weighted-avg ?c1 5 ?c2 5 ?c3 10) 1.0))
+    (if (> ?res ?cur-c) then
+        (modify ?f (certainty (max-certainty ?cur-c ?res)) (type result))
+        (assert (sendmessage (value (str-cat "ПРОЦЕСС: Пицца (премиум) CF=" ?res))))
+    )
+)
+(defrule make-pizza-dough-std
+    (declare (salience 10))
+    (ingredient (name "Мука пшеничная") (certainty ?c1&:(> ?c1 0.1)))
+    (ingredient (name "Вода") (certainty ?c2&:(> ?c2 0.1)))
+    (ingredient (name "Дрожжи") (certainty ?c3&:(> ?c3 0.1)))
+    (ingredient (name "Соль") (certainty ?c4&:(> ?c4 0.1)))
+    ?f <- (ingredient (name "Тесто для пиццы") (certainty ?cur-c))
+    =>
+    (bind ?res (* (weighted-avg ?c1 10 ?c2 2 ?c3 2 ?c4 1) 0.95))
+    (if (> ?res ?cur-c) then
+        (modify ?f (certainty (max-certainty ?cur-c ?res)) (type result))
+        (assert (sendmessage (value (str-cat "ПРОЦЕСС: Тесто (стандарт) CF=" ?res))))
+    )
+)
