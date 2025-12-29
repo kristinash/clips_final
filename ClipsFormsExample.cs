@@ -1,4 +1,4 @@
-﻿using CLIPSNET;
+using CLIPSNET;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -41,6 +41,15 @@ namespace ClipsFormsExample
         {
             synth = new SpeechSynthesizer();
             synth.SetOutputToDefaultAudioDevice();
+            var voices = synth.GetInstalledVoices();
+            foreach (var voice in voices)
+            {
+                if (voice.VoiceInfo.Culture.Name.StartsWith("ru"))
+                {
+                    synth.SelectVoice(voice.VoiceInfo.Name);
+                    break;
+                }
+            }
         }
 
         private void NewRecognPhrases(List<string> phrases = null)
@@ -114,7 +123,7 @@ namespace ClipsFormsExample
             listView1.CheckBoxes = true;
             listView1.Columns.Add("Ингредиент / Блюдо", 120);
             listView1.Columns.Add("Уверенность (CF)", 120);
-          
+
             listView2.Columns.Clear();
             listView2.Columns.Add("Блюдо / Продукт", 120);
             listView2.Columns.Add("Уверенность (CF)", 110);
@@ -220,7 +229,7 @@ namespace ClipsFormsExample
                     if (isVoiceEnabled)
                     {
                         outputBox.AppendText("СИСТЕМА (Голос): " + message + "\r\n");
-                        synth.SpeakAsync(message);
+                        synth.Speak(message);
                         isWaitingForResponse = true;
                         NewRecognPhrases(phrases);
 
@@ -240,10 +249,10 @@ namespace ClipsFormsExample
 
         private void ShowResponseButtons(string question, List<string> options)
         {
-            var dialog = new Form {Width = 350, Height = 150, StartPosition = FormStartPosition.CenterParent };
+            var dialog = new Form { Width = 350, Height = 150, StartPosition = FormStartPosition.CenterParent };
             var panel = new FlowLayoutPanel { Dock = DockStyle.Fill };
             dialog.Controls.Add(panel);
-            dialog.Controls.Add(new Label { Text = question, Dock = DockStyle.Top});
+            dialog.Controls.Add(new Label { Text = question, Dock = DockStyle.Top });
 
             foreach (var opt in options)
             {
@@ -342,7 +351,7 @@ namespace ClipsFormsExample
             else recog.RecognizeAsyncStop();
         }
 
-        private string DecodeClipsString(string t) { return Encoding.UTF8.GetString(Encoding.Default.GetBytes(t));  }
+        private string DecodeClipsString(string t) { return Encoding.UTF8.GetString(Encoding.Default.GetBytes(t)); }
         private string ToClipsNumberString(double v) => v.ToString("F6", invariantCulture);
         private string ToDisplayNumberString(double v) => v.ToString("F2", uiCulture);
         private double ParseNumberString(string t) { t = t.Trim().Replace(',', '.'); return double.TryParse(t, NumberStyles.Any, invariantCulture, out double r) ? Math.Max(-1, Math.Min(1, r)) : 1.0; }
